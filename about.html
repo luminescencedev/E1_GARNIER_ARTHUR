@@ -1,30 +1,34 @@
 ﻿<!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A propos de l'agence WebCraft Solutions.">
-    <title>WebCraft Solutions — A propos</title>
-    <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Presentation de l'agence WebCraft Solutions."
+    />
+    <title>WebCraft Solutions - A propos</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body data-page="about">
-    <a class="skip-link" href="#content">Aller au contenu</a>
-    <header class="site-header" role="banner">
+    <a class="skip-link" href="#main">Passer au contenu</a>
+    <header>
       <div class="container header-inner">
-        <a class="brand" href="index.html" aria-label="WebCraft Solutions accueil">
-          <span class="brand-logo">WebCraft</span>
-          <span class="brand-tag">Solutions</span>
+        <a class="brand" href="index.html" aria-label="WebCraft Solutions">
+          <strong>WebCraft</strong>
+          <span>Solutions</span>
         </a>
-        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
-          <span class="nav-toggle-box" aria-hidden="true">
-            <span class="nav-toggle-bar"></span>
-            <span class="nav-toggle-bar"></span>
-            <span class="nav-toggle-bar"></span>
-          </span>
-          <span class="visually-hidden">Afficher le menu</span>
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-controls="site-nav"
+          aria-expanded="false"
+        >
+          Menu
         </button>
-        <nav class="site-nav" id="primary-navigation" data-primary-nav aria-label="Navigation principale">
-          <ul>
+        <nav aria-label="Navigation principale">
+          <ul id="site-nav" data-nav-list>
             <li><a href="index.html">Accueil</a></li>
             <li><a href="about.html" aria-current="page">A propos</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -33,65 +37,85 @@
       </div>
     </header>
 
-    <main id="content">
-      <section class="page-hero">
-        <div class="container">
-          <p class="hero-kicker">Notre manifeste</p>
-          <h1 class="page-title">Nous unissons design et technologie pour creer des experiences sur mesure</h1>
-          <p class="page-lead">WebCraft Solutions est une equipe multidisciplinaire dediee a la conception d'interfaces premium pour les marques ambitieuses.</p>
+    <main id="main">
+      <section class="page-hero container">
+        <small>Notre histoire</small>
+        <h1>WebCraft Solutions en quelques chiffres</h1>
+        <p>
+          Nous sommes un petit collectif de developpeurs front-end base a Paris.
+          L'objectif : livrer des interfaces lisibles, rapides a prendre en main
+          et faciles a maintenir sans frameworks.
+        </p>
+      </section>
+
+      <section class="container" style="padding: 50px 0">
+        <div class="split">
+          <article class="panel">
+            <h2>Ce que nous faisons</h2>
+            <p>
+              Integration de maquettes Figma, optimisation de sites existants,
+              petits prototypes JavaScript. Nous gardons un scope maitrise pour
+              rester focus sur la qualite.
+            </p>
+            <p>
+              Chaque projet commence par un audit rapide : pages, performances,
+              points bloquants. Ensuite nous structurons un planning simple avec
+              validations hebdomadaires.
+            </p>
+          </article>
+
+          <article class="panel">
+            <h2>Nos valeurs</h2>
+            <p>
+              Pas de promesses intenables : nous preferons livrer moins, mais le
+              livrer bien. Le code reste commente quand c'est utile, et la
+              documentation est livree avec.
+            </p>
+            <p>
+              Nous travaillons surtout avec des PME, studios creatifs et
+              associations qui veulent une vitrine claire avec un budget serre.
+            </p>
+          </article>
         </div>
       </section>
 
-      <section class="about-intro">
-        <div class="container about-grid">
-          <article class="about-card">
-            <h2>Ce qui nous anime</h2>
-            <p>Nous orchestrons des parcours engages en collaborant etroitement avec nos clients. Chaque projet est une immersion dans l'univers de la marque pour aligner vision, ton et performances.</p>
-          </article>
-          <article class="about-card">
-            <h2>Notre promesse</h2>
-            <p>Livrer des experiences digitales accessibles, rapides et esthetiques. Nous associons strategie, design system et developpement pour amplifier la valeur de chaque produit.</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="about-stats" aria-label="Chiffres cles de l'agence">
-        <div class="container stats-grid">
-          <article class="stat-card">
-            <p class="stat-value">45+</p>
-            <p class="stat-label">Projets deployes</p>
-          </article>
-          <article class="stat-card">
-            <p class="stat-value">12</p>
-            <p class="stat-label">Talents complementaires</p>
-          </article>
-          <article class="stat-card">
-            <p class="stat-value">6 pays</p>
-            <p class="stat-label">Clients accompagnes en 2024</p>
-          </article>
-        </div>
-      </section>
-
-      <section class="about-process">
-        <div class="container process-grid">
-          <div class="process-copy">
-            <h2 class="section-title">Notre approche</h2>
-            <p class="section-subtitle">Une methode iterative alignee sur les objectifs business et utilisateurs.</p>
+      <section class="container" style="padding-bottom: 50px">
+        <h2 style="margin-bottom: 24px">Indicateurs</h2>
+        <div class="stats">
+          <div>
+            <strong>45+</strong>
+            <span>Projets livres</span>
           </div>
-          <ol class="process-list">
-            <li>Immersion et cadrage des objectifs</li>
-            <li>Design system et prototypage interactif</li>
-            <li>Developpement front-end et optimisation</li>
-            <li>Tests utilisateurs et accompagnement</li>
-          </ol>
+          <div>
+            <strong>6</strong>
+            <span>Talents reguliers</span>
+          </div>
+          <div>
+            <strong>4</strong>
+            <span>Annees d'activite</span>
+          </div>
         </div>
+      </section>
+
+      <section class="container" style="padding-bottom: 70px">
+        <article class="panel">
+          <h2>Methode par etapes</h2>
+          <ol class="process-list">
+            <li>Analyse rapide du besoin et des gabarits existants.</li>
+            <li>Preparation d'un styleguide (typos, couleurs, composants).</li>
+            <li>Integration HTML/CSS puis ajout des interactivites JS.</li>
+            <li>Livraison avec tests sur desktop + mobile et mini guide.</li>
+          </ol>
+        </article>
       </section>
     </main>
 
-    <footer class="site-footer">
-      <div class="container footer-inner">
-        <p>&copy; <span data-current-year></span> WebCraft Solutions. Tous droits reserves.</p>
-        <ul class="footer-links" aria-label="Reseaux sociaux">
+    <footer>
+      <div class="container">
+        <p>
+          &copy; <span data-current-year></span> WebCraft Solutions. Portfolio.
+        </p>
+        <ul>
           <li><a href="#">Behance</a></li>
           <li><a href="#">Dribbble</a></li>
           <li><a href="#">LinkedIn</a></li>

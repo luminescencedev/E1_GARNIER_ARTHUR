@@ -1,37 +1,14 @@
 ﻿const API_URL = "https://gabistam.github.io/Demo_API/data/projects.json";
 
-const appState = {
+const state = {
   projects: [],
-  activeFilter: "all",
-  lastFocused: null,
+  filter: "all",
+  lastFocus: null,
 };
-
-const refs = {
-  filterRoot: null,
-  projectGrid: null,
-  countBadge: null,
-  loader: null,
-  errorBox: null,
-  modalRoot: null,
-  modalOverlay: null,
-  modalClose: null,
-  modalImage: null,
-  modalTitle: null,
-  modalClient: null,
-  modalDescription: null,
-  modalCategory: null,
-  modalYear: null,
-  modalDuration: null,
-  modalTechnologies: null,
-  modalFeatures: null,
-  modalLink: null,
-};
-
-let isModalListenerBound = false;
 
 document.addEventListener("DOMContentLoaded", () => {
-  initNavigation();
-  initDynamicYear();
+  setupNav();
+  fillCurrentYear();
 
   const page = document.body.dataset.page;
 
@@ -44,439 +21,393 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-const initDynamicYear = () => {
+function setupNav() {
+  const toggle = document.querySelector("[data-nav-toggle]");
+  const list = document.querySelector("[data-nav-list]");
+
+  if (!toggle || !list) return;
+
+  toggle.addEventListener("click", () => {
+    const isOpen = list.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  list.addEventListener("click", (event) => {
+    if (event.target instanceof HTMLAnchorElement) {
+      list.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+}
+
+function fillCurrentYear() {
   const year = new Date().getFullYear();
   document.querySelectorAll("[data-current-year]").forEach((node) => {
     node.textContent = year;
   });
-};
+}
 
-const initNavigation = () => {
-  const toggle = document.querySelector("[data-nav-toggle]");
-  const nav = document.querySelector("[data-primary-nav]");
+function initPortfolio() {
+  const filterBox = document.querySelector("[data-filter-root]");
+  const grid = document.querySelector("[data-project-grid]");
+  const loader = document.querySelector("[data-loader]");
+  const errorBox = document.querySelector("[data-error]");
+  const countBadge = document.querySelector("[data-project-count]");
 
-  if (!toggle || !nav) return;
+  if (!filterBox || !grid || !loader || !errorBox || !countBadge) return;
 
-  toggle.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("is-open");
-    toggle.setAttribute("aria-expanded", String(isOpen));
-  });
+  state.filterBox = filterBox;
+  state.grid = grid;
+  state.loader = loader;
+  state.errorBox = errorBox;
+  state.countBadge = countBadge;
 
-  nav.addEventListener("click", (event) => {
-    if (event.target instanceof HTMLAnchorElement) {
-      nav.classList.remove("is-open");
-      toggle.setAttribute("aria-expanded", "false");
-    }
-  });
-};
+  state.modal = document.querySelector("[data-modal]");
+  state.modalImage = document.querySelector("[data-modal-image]");
+  state.modalClient = document.querySelector("[data-modal-client]");
+  state.modalTitle = document.querySelector("[data-modal-title]");
+  state.modalDescription = document.querySelector("[data-modal-description]");
+  state.modalCategory = document.querySelector("[data-modal-category]");
+  state.modalYear = document.querySelector("[data-modal-year]");
+  state.modalDuration = document.querySelector("[data-modal-duration]");
+  state.modalTags = document.querySelector("[data-modal-technologies]");
+  state.modalFeatures = document.querySelector("[data-modal-features]");
+  state.modalLink = document.querySelector("[data-modal-link]");
+  state.modalClose = document.querySelector("[data-modal-close]");
 
-const initPortfolio = () => {
-  refs.filterRoot = document.querySelector("[data-filter-root]");
-  refs.projectGrid = document.querySelector("[data-project-grid]");
-  refs.countBadge = document.querySelector("[data-project-count]");
-  refs.loader = document.querySelector("[data-loader]");
-  refs.errorBox = document.querySelector("[data-error]");
-  refs.modalRoot = document.querySelector("[data-modal-root]");
-  refs.modalOverlay = document.querySelector("[data-modal-overlay]");
-  refs.modalClose = document.querySelector("[data-modal-close]");
-  refs.modalImage = document.querySelector("[data-modal-image]");
-  refs.modalTitle = document.querySelector("[data-modal-title]");
-  refs.modalClient = document.querySelector("[data-modal-client]");
-  refs.modalDescription = document.querySelector("[data-modal-description]");
-  refs.modalCategory = document.querySelector("[data-modal-category]");
-  refs.modalYear = document.querySelector("[data-modal-year]");
-  refs.modalDuration = document.querySelector("[data-modal-duration]");
-  refs.modalTechnologies = document.querySelector("[data-modal-technologies]");
-  refs.modalFeatures = document.querySelector("[data-modal-features]");
-  refs.modalLink = document.querySelector("[data-modal-link]");
+  bindModal();
+  loadProjects();
+}
 
-  bindModalEvents();
-  fetchProjects();
-};
-
-const bindModalEvents = () => {
-  if (!refs.modalRoot) return;
-
-  refs.modalClose?.addEventListener("click", closeModal);
-
-  refs.modalOverlay?.addEventListener("click", (event) => {
-    if (event.target === refs.modalOverlay) {
-      closeModal();
-    }
-  });
-
-  if (!isModalListenerBound) {
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeModal();
-      }
-    });
-    isModalListenerBound = true;
-  }
-};
-
-const fetchProjects = async () => {
-  if (!refs.projectGrid) return;
-
-  toggleLoader(true);
+async function loadProjects() {
+  showLoader(true);
   showError("");
 
   try {
     const response = await fetch(API_URL, { cache: "no-store" });
 
     if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+      throw new Error(`Status ${response.status}`);
     }
 
-    const payload = await response.json();
-    const projects = Array.isArray(payload.projects) ? payload.projects : [];
-    const technologies = Array.isArray(payload.technologies) ? payload.technologies : [];
-    const collected = projects.flatMap((project) =>
-      Array.isArray(project.technologies) ? project.technologies : []
-    );
+    const data = await response.json();
+    const projects = Array.isArray(data.projects) ? data.projects : [];
+    const techsFromApi = Array.isArray(data.technologies) ? data.technologies : [];
 
-    const uniqueTechnologies = [...new Set([...technologies, ...collected])]
-      .filter(Boolean)
-      .map((tech) => String(tech).trim())
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
+    state.projects = projects;
 
-    appState.projects = projects;
-    appState.activeFilter = "all";
+    const allTechs = new Set([
+      "all",
+      ...techsFromApi,
+      ...projects.flatMap((project) => project.technologies || []),
+    ]);
 
-    renderFilters(uniqueTechnologies);
-    updateProjectList();
+    renderFilters(Array.from(allTechs).filter(Boolean));
+    renderProjects();
   } catch (error) {
-    console.error("Failed to fetch projects", error);
-    showError("Impossible de charger les projets. Verifiez votre connexion et reessayez.");
+    console.error("fetch error", error);
+    showError("Impossible de charger les projets pour le moment.");
   } finally {
-    toggleLoader(false);
+    showLoader(false);
   }
-};
+}
 
-const renderFilters = (technologies = []) => {
-  if (!refs.filterRoot) return;
+function renderFilters(list) {
+  if (!state.filterBox) return;
 
-  refs.filterRoot.innerHTML = "";
+  state.filterBox.innerHTML = "";
 
-  const filters = ["all", ...technologies];
+  list.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
 
-  filters.forEach((tech) => {
+  list.forEach((tech) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "filter-button";
-    button.dataset.filter = tech;
     button.textContent = tech === "all" ? "Tous" : tech;
-
-    const isActive = tech === appState.activeFilter;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
-
-    button.addEventListener("click", () => handleFilterChange(tech));
-    refs.filterRoot.appendChild(button);
+    button.dataset.filter = tech;
+    button.classList.toggle("active", state.filter === tech);
+    button.addEventListener("click", () => {
+      state.filter = tech;
+      updateFilterButtons();
+      renderProjects();
+    });
+    state.filterBox.appendChild(button);
   });
-};
+}
 
-const handleFilterChange = (nextFilter) => {
-  if (appState.activeFilter === nextFilter) return;
-
-  appState.activeFilter = nextFilter;
-
-  refs.filterRoot?.querySelectorAll(".filter-button").forEach((button) => {
-    const isActive = button.dataset.filter === nextFilter;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-pressed", String(isActive));
+function updateFilterButtons() {
+  state.filterBox?.querySelectorAll("button").forEach((button) => {
+    const isActive = button.dataset.filter === state.filter;
+    button.classList.toggle("active", isActive);
   });
+}
 
-  updateProjectList();
-};
-
-const updateProjectList = () => {
-  if (!refs.projectGrid) return;
-
-  const projects = getFilteredProjects();
-  renderProjects(projects);
-  updateCount(projects.length);
-};
-
-const getFilteredProjects = () => {
-  if (appState.activeFilter === "all") {
-    return [...appState.projects];
+function getVisibleProjects() {
+  if (state.filter === "all") {
+    return state.projects;
   }
 
-  return appState.projects.filter((project) =>
-    Array.isArray(project.technologies) && project.technologies.includes(appState.activeFilter)
+  return state.projects.filter((project) =>
+    Array.isArray(project.technologies) && project.technologies.includes(state.filter)
   );
-};
+}
 
-const renderProjects = (projects) => {
-  if (!refs.projectGrid) return;
+function renderProjects() {
+  if (!state.grid || !state.countBadge) return;
 
-  refs.projectGrid.innerHTML = "";
+  showLoader(false);
+
+  const projects = getVisibleProjects();
+  state.countBadge.textContent = projects.length;
+  state.grid.innerHTML = "";
 
   if (!projects.length) {
-    const message = document.createElement("p");
-    message.className = "empty-state";
-    message.textContent = "Aucun projet ne correspond a ce filtre.";
-    refs.projectGrid.appendChild(message);
+    const empty = document.createElement("p");
+    empty.className = "empty-state";
+    empty.textContent = "Aucun projet trouve pour ce filtre.";
+    state.grid.appendChild(empty);
     return;
   }
 
   const fragment = document.createDocumentFragment();
 
   projects.forEach((project) => {
-    const projectTitle = project.title || "Projet WebCraft";
+    const title = project.title || "Projet WebCraft";
+
     const card = document.createElement("article");
-    card.className = "project-card";
+    card.className = "card";
     card.tabIndex = 0;
     card.setAttribute("role", "button");
 
-    const picture = document.createElement("figure");
-    picture.className = "project-media";
+    const figure = document.createElement("figure");
 
     if (project.image) {
-      const image = document.createElement("img");
-      image.src = project.image;
-      image.alt = `Visuel du projet ${projectTitle}`;
-      image.loading = "lazy";
-      picture.appendChild(image);
+      const img = document.createElement("img");
+      img.src = project.image;
+      img.alt = `Illustration du projet ${title}`;
+      img.loading = "lazy";
+      figure.appendChild(img);
     } else {
-      picture.classList.add("is-placeholder");
-      const placeholder = document.createElement("span");
-      placeholder.textContent = "Visuel a venir";
-      picture.appendChild(placeholder);
+      figure.textContent = "Visuel a venir";
     }
 
-    card.appendChild(picture);
+    card.appendChild(figure);
 
-    const content = document.createElement("div");
-    content.className = "project-content";
-
-    const client = document.createElement("p");
-    client.className = "project-client";
+    const client = document.createElement("span");
+    client.className = "client";
     client.textContent = project.client || "Client WebCraft";
-    content.appendChild(client);
+    card.appendChild(client);
 
-    const title = document.createElement("h3");
-    title.className = "project-title";
-    title.textContent = projectTitle;
-    content.appendChild(title);
+    const heading = document.createElement("h3");
+    heading.textContent = title;
+    card.appendChild(heading);
 
     const meta = document.createElement("div");
-    meta.className = "project-meta";
+    meta.className = "meta";
 
     if (project.category) {
-      const category = document.createElement("span");
-      category.textContent = project.category;
-      meta.appendChild(category);
+      meta.appendChild(buildMetaItem(project.category));
     }
 
     if (project.year) {
-      const year = document.createElement("span");
-      year.textContent = String(project.year);
-      meta.appendChild(year);
+      meta.appendChild(buildMetaItem(project.year));
     }
 
     if (project.duration) {
-      const duration = document.createElement("span");
-      duration.textContent = project.duration;
-      meta.appendChild(duration);
+      meta.appendChild(buildMetaItem(project.duration));
     }
 
-    if (meta.childElementCount > 0) {
-      content.appendChild(meta);
+    if (meta.children.length) {
+      card.appendChild(meta);
     }
 
-    const techContainer = document.createElement("div");
-    techContainer.className = "project-technologies";
+    const tags = document.createElement("div");
+    tags.className = "tags";
 
-    const techList = Array.isArray(project.technologies) ? project.technologies : [];
-    techList.forEach((tech) => {
+    (project.technologies || []).forEach((tech) => {
       const badge = document.createElement("span");
       badge.textContent = tech;
-      techContainer.appendChild(badge);
+      tags.appendChild(badge);
     });
 
-    if (techContainer.childElementCount > 0) {
-      content.appendChild(techContainer);
+    if (tags.children.length) {
+      card.appendChild(tags);
     }
 
-    card.appendChild(content);
+    const more = document.createElement("span");
+    more.className = "more";
+    more.textContent = "Voir details";
+    card.appendChild(more);
 
-    const actions = document.createElement("div");
-    actions.className = "project-actions";
+    const open = () => openModal(project, card);
 
-    const cta = document.createElement("span");
-    cta.className = "project-button";
-    cta.textContent = "Voir details";
-    cta.setAttribute("aria-hidden", "true");
-    actions.appendChild(cta);
-
-    card.appendChild(actions);
-
-    const openFromCard = () => openModal(project, card);
-
-    card.addEventListener("click", () => {
-      openFromCard();
-    });
-
+    card.addEventListener("click", open);
     card.addEventListener("keydown", (event) => {
       if (event.key !== "Enter" && event.key !== " " && event.key !== "Spacebar" && event.key !== "Space") {
         return;
       }
       event.preventDefault();
-      openFromCard();
+      open();
     });
 
     fragment.appendChild(card);
   });
 
-  refs.projectGrid.appendChild(fragment);
-};
+  state.grid.appendChild(fragment);
+}
 
+function buildMetaItem(value) {
+  const span = document.createElement("span");
+  span.textContent = value;
+  return span;
+}
 
-const openModal = (project, trigger) => {
-  if (!refs.modalRoot) return;
+function bindModal() {
+  if (!state.modal) return;
 
-  appState.lastFocused = trigger instanceof HTMLElement ? trigger : document.activeElement;
+  state.modalClose?.addEventListener("click", closeModal);
 
-  populateModal(project);
-  refs.modalRoot.removeAttribute("hidden");
-  document.body.classList.add("modal-open");
-
-  requestAnimationFrame(() => {
-    refs.modalClose?.focus();
+  state.modal.addEventListener("click", (event) => {
+    if (event.target === state.modal) {
+      closeModal();
+    }
   });
-};
 
-const populateModal = (project) => {
-  if (!refs.modalRoot) return;
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeModal();
+    }
+  });
+}
 
-  if (refs.modalTitle) {
-    refs.modalTitle.textContent = project.title || "Projet WebCraft";
-  }
+function openModal(project, trigger) {
+  if (!state.modal) return;
 
-  if (refs.modalClient) {
-    refs.modalClient.textContent = project.client || "Client WebCraft";
-  }
+  state.lastFocus = trigger instanceof HTMLElement ? trigger : null;
 
-  if (refs.modalDescription) {
-    refs.modalDescription.textContent = project.description || "Description non renseignee.";
-  }
+  fillModal(project);
+  state.modal.hidden = false;
+  document.body.style.overflow = "hidden";
+  state.modalClose?.focus();
+}
 
-  if (refs.modalCategory) {
-    refs.modalCategory.textContent = project.category || "Non renseigne";
-  }
+function fillModal(project) {
+  const title = project.title || "Projet WebCraft";
 
-  if (refs.modalYear) {
-    refs.modalYear.textContent = project.year ? String(project.year) : "-";
-  }
-
-  if (refs.modalDuration) {
-    refs.modalDuration.textContent = project.duration || "-";
-  }
-
-  if (refs.modalImage) {
+  if (state.modalImage) {
     if (project.image) {
-      refs.modalImage.src = project.image;
-      refs.modalImage.alt = project.title ? `Visuel du projet ${project.title}` : "Visuel du projet";
-      refs.modalImage.removeAttribute("hidden");
+      state.modalImage.src = project.image;
+      state.modalImage.alt = `Visuel du projet ${title}`;
+      state.modalImage.removeAttribute("hidden");
     } else {
-      refs.modalImage.src = "";
-      refs.modalImage.alt = "";
-      refs.modalImage.setAttribute("hidden", "");
+      state.modalImage.src = "";
+      state.modalImage.alt = "";
+      state.modalImage.setAttribute("hidden", "true");
     }
   }
 
-  if (refs.modalTechnologies) {
-    refs.modalTechnologies.innerHTML = "";
-    const techList = Array.isArray(project.technologies) ? project.technologies : [];
+  if (state.modalClient) {
+    state.modalClient.textContent = project.client || "Client WebCraft";
+  }
 
-    if (techList.length === 0) {
+  if (state.modalTitle) {
+    state.modalTitle.textContent = title;
+  }
+
+  if (state.modalDescription) {
+    state.modalDescription.textContent = project.description || "Description a completer.";
+  }
+
+  if (state.modalCategory) {
+    state.modalCategory.textContent = project.category || "Non precise";
+  }
+
+  if (state.modalYear) {
+    state.modalYear.textContent = project.year ? String(project.year) : "-";
+  }
+
+  if (state.modalDuration) {
+    state.modalDuration.textContent = project.duration || "-";
+  }
+
+  if (state.modalTags) {
+    state.modalTags.innerHTML = "";
+    const list = project.technologies || [];
+
+    if (!list.length) {
       const badge = document.createElement("span");
-      badge.textContent = "Technologie non renseignee";
-      refs.modalTechnologies.appendChild(badge);
+      badge.textContent = "Tech a confirmer";
+      state.modalTags.appendChild(badge);
     } else {
-      techList.forEach((tech) => {
+      list.forEach((tech) => {
         const badge = document.createElement("span");
         badge.textContent = tech;
-        refs.modalTechnologies.appendChild(badge);
+        state.modalTags.appendChild(badge);
       });
     }
   }
 
-  if (refs.modalFeatures) {
-    refs.modalFeatures.innerHTML = "";
-    const features = Array.isArray(project.features) ? project.features : [];
+  if (state.modalFeatures) {
+    state.modalFeatures.innerHTML = "";
+    const features = project.features || [];
 
-    if (features.length === 0) {
+    if (!features.length) {
       const item = document.createElement("li");
-      item.textContent = "Pas de fonctionnalite detaillee.";
-      refs.modalFeatures.appendChild(item);
+      item.textContent = "Fonctionnalites a detailler.";
+      state.modalFeatures.appendChild(item);
     } else {
       features.forEach((feature) => {
         const item = document.createElement("li");
         item.textContent = feature;
-        refs.modalFeatures.appendChild(item);
+        state.modalFeatures.appendChild(item);
       });
     }
   }
 
-  if (refs.modalLink) {
+  if (state.modalLink) {
     if (project.url) {
-      refs.modalLink.href = project.url;
-      refs.modalLink.removeAttribute("hidden");
+      state.modalLink.href = project.url;
+      state.modalLink.removeAttribute("hidden");
     } else {
-      refs.modalLink.href = "#";
-      refs.modalLink.setAttribute("hidden", "");
+      state.modalLink.href = "#";
+      state.modalLink.setAttribute("hidden", "true");
     }
   }
-};
+}
 
-const closeModal = () => {
-  if (!refs.modalRoot || refs.modalRoot.hasAttribute("hidden")) return;
+function closeModal() {
+  if (!state.modal || state.modal.hidden) return;
 
-  refs.modalRoot.setAttribute("hidden", "");
-  document.body.classList.remove("modal-open");
+  state.modal.hidden = true;
+  document.body.style.overflow = "";
 
-  const target = appState.lastFocused;
-  if (target && typeof target.focus === "function") {
-    target.focus();
+  if (state.lastFocus && typeof state.lastFocus.focus === "function") {
+    state.lastFocus.focus();
   }
 
-  appState.lastFocused = null;
-};
+  state.lastFocus = null;
+}
 
-const toggleLoader = (isVisible) => {
-  if (!refs.loader) return;
+function showLoader(show) {
+  if (!state.loader) return;
 
-  if (isVisible) {
-    refs.loader.removeAttribute("hidden");
-  } else {
-    refs.loader.setAttribute("hidden", "");
-  }
-};
+  state.loader.hidden = !show;
+  state.loader.style.display = show ? "flex" : "none";
+}
 
-const showError = (message) => {
-  if (!refs.errorBox) return;
+function showError(message) {
+  if (!state.errorBox) return;
 
   if (!message) {
-    refs.errorBox.textContent = "";
-    refs.errorBox.setAttribute("hidden", "");
+    state.errorBox.hidden = true;
+    state.errorBox.textContent = "";
     return;
   }
 
-  refs.errorBox.textContent = message;
-  refs.errorBox.removeAttribute("hidden");
-};
+  state.errorBox.hidden = false;
+  state.errorBox.textContent = message;
+}
 
-const updateCount = (count = 0) => {
-  if (refs.countBadge) {
-    refs.countBadge.textContent = String(count);
-  }
-};
-
-const initContactForm = () => {
+function initContactForm() {
   const form = document.querySelector("[data-contact-form]");
   const status = document.querySelector("[data-form-status]");
 
@@ -486,21 +417,25 @@ const initContactForm = () => {
     event.preventDefault();
 
     const formData = new FormData(form);
-    const payload = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      message: formData.get("message"),
+    const values = {
+      name: formData.get("name") || "",
+      email: formData.get("email") || "",
+      message: formData.get("message") || "",
     };
 
-    const result = validateContactForm(payload);
-    applyFieldFeedback(form, result.errors);
+    const errors = validateContact(values);
+    applyFieldErrors(form, errors);
 
-    if (!result.isValid) {
-      showFormStatus(status, "Merci de corriger les erreurs indiquees.", "error");
+    if (Object.values(errors).some(Boolean)) {
+      status.hidden = false;
+      status.textContent = "Merci de corriger les erreurs.";
+      status.className = "status-msg error";
       return;
     }
 
-    showFormStatus(status, "Merci, votre message a bien ete transmis.", "success");
+    status.hidden = false;
+    status.textContent = "Message envoye. Nous revenons vers vous rapidement.";
+    status.className = "status-msg success";
     form.reset();
   });
 
@@ -510,88 +445,66 @@ const initContactForm = () => {
     }
 
     const { name, value } = event.target;
-    const errorMessage = validateSingleField(name, value);
-    applySingleFieldFeedback(form, name, errorMessage);
+    const error = validateField(name, value);
+    setFieldError(form, name, error);
 
-    if (status.textContent) {
-      showFormStatus(status, "", "clear");
+    const status = document.querySelector("[data-form-status]");
+    if (status) {
+      status.hidden = true;
+      status.textContent = "";
+      status.className = "status-msg";
     }
   });
-};
+}
 
-const validateContactForm = ({ name, email, message }) => {
-  const errors = {
-    name: validateSingleField("name", name),
-    email: validateSingleField("email", email),
-    message: validateSingleField("message", message),
+function validateContact(values) {
+  return {
+    name: validateField("name", values.name),
+    email: validateField("email", values.email),
+    message: validateField("message", values.message),
   };
+}
 
-  const isValid = Object.values(errors).every((value) => !value);
+function validateField(field, value) {
+  const text = typeof value === "string" ? value.trim() : "";
 
-  return { isValid, errors };
-};
-
-const validateSingleField = (fieldName, value) => {
-  const trimmed = typeof value === "string" ? value.trim() : "";
-
-  switch (fieldName) {
-    case "name":
-      if (!trimmed) return "Le champ nom est obligatoire.";
-      if (trimmed.length < 2) return "Le nom doit contenir au moins 2 caracteres.";
-      return "";
-    case "email":
-      if (!trimmed) return "Le champ email est obligatoire.";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return "Format email invalide.";
-      return "";
-    case "message":
-      if (!trimmed) return "Le message est obligatoire.";
-      if (trimmed.length < 10) return "Le message doit contenir au moins 10 caracteres.";
-      return "";
-    default:
-      return "";
+  if (field === "name") {
+    if (!text) return "Le nom est requis.";
+    if (text.length < 2) return "Entrez au moins deux caracteres.";
   }
-};
 
-const applyFieldFeedback = (form, errors) => {
-  Object.entries(errors).forEach(([fieldName, message]) => {
-    applySingleFieldFeedback(form, fieldName, message);
+  if (field === "email") {
+    if (!text) return "L'email est requis.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) return "Format email invalide.";
+  }
+
+  if (field === "message") {
+    if (!text) return "Le message est requis.";
+    if (text.length < 10) return "Developpez un peu plus votre demande.";
+  }
+
+  return "";
+}
+
+function applyFieldErrors(form, errors) {
+  Object.entries(errors).forEach(([field, message]) => {
+    setFieldError(form, field, message);
   });
-};
+}
 
-const applySingleFieldFeedback = (form, fieldName, message) => {
-  const field = form.elements.namedItem(fieldName);
-  const errorElement = form.querySelector(`[data-error-for="${fieldName}"]`);
+function setFieldError(form, field, message) {
+  const input = form.elements.namedItem(field);
+  const feedback = form.querySelector(`[data-error-for="${field}"]`);
 
-  if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) || !errorElement) {
+  if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) || !feedback) {
     return;
   }
 
   if (message) {
-    field.setAttribute("aria-invalid", "true");
-    errorElement.textContent = message;
+    input.setAttribute("aria-invalid", "true");
+    feedback.textContent = message;
   } else {
-    field.removeAttribute("aria-invalid");
-    errorElement.textContent = "";
+    input.removeAttribute("aria-invalid");
+    feedback.textContent = "";
   }
-};
-
-const showFormStatus = (element, message, variant) => {
-  if (!element) return;
-
-  element.classList.remove("is-error", "is-success");
-
-  if (!message) {
-    element.textContent = "";
-    element.setAttribute("hidden", "");
-    return;
-  }
-
-  element.textContent = message;
-  element.removeAttribute("hidden");
-
-  if (variant === "error") {
-    element.classList.add("is-error");
-  } else if (variant === "success") {
-    element.classList.add("is-success");
-  }
-};
+}

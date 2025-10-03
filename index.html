@@ -5,44 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Portfolio interactif de l'agence WebCraft Solutions."
+      content="Portfolio de l'agence WebCraft Solutions."
     />
-    <title>WebCraft Solutions — Portfolio</title>
+    <title>WebCraft Solutions - Portfolio</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body data-page="home">
-    <a class="skip-link" href="#content">Aller au contenu</a>
-    <header class="site-header" role="banner">
+    <a class="skip-link" href="#main">Passer au contenu</a>
+    <header>
       <div class="container header-inner">
-        <a
-          class="brand"
-          href="index.html"
-          aria-label="WebCraft Solutions accueil"
-        >
-          <span class="brand-logo">WebCraft</span>
-          <span class="brand-tag">Solutions</span>
+        <a class="brand" href="index.html" aria-label="WebCraft Solutions">
+          <strong>WebCraft</strong>
+          <span>Solutions</span>
         </a>
         <button
           class="nav-toggle"
           type="button"
           data-nav-toggle
+          aria-controls="site-nav"
           aria-expanded="false"
-          aria-controls="primary-navigation"
         >
-          <span class="nav-toggle-box" aria-hidden="true">
-            <span class="nav-toggle-bar"></span>
-            <span class="nav-toggle-bar"></span>
-            <span class="nav-toggle-bar"></span>
-          </span>
-          <span class="visually-hidden">Afficher le menu</span>
+          Menu
         </button>
-        <nav
-          class="site-nav"
-          id="primary-navigation"
-          data-primary-nav
-          aria-label="Navigation principale"
-        >
-          <ul>
+        <nav aria-label="Navigation principale">
+          <ul id="site-nav" data-nav-list>
             <li><a href="index.html" aria-current="page">Accueil</a></li>
             <li><a href="about.html">A propos</a></li>
             <li><a href="contact.html">Contact</a></li>
@@ -51,143 +37,117 @@
       </div>
     </header>
 
-    <main id="content">
+    <main id="main">
       <section class="hero">
         <div class="container hero-grid">
-          <div class="hero-copy">
-            <p class="hero-kicker">Studio digital WebCraft</p>
-            <h1 class="hero-title">
-              Des experiences web elegantes et percutantes
-            </h1>
-            <p class="hero-subtitle">
-              Nous concevons des interfaces immersives pour valoriser les
-              projets de nos clients et maximiser l'impact de leurs marques.
+          <div class="hero-text">
+            <small>Studio web</small>
+            <h1>Des interfaces sobres qui vont droit au but</h1>
+            <p>
+              L'agence WebCraft concoit des sites vitrines et applications
+              front-end avec une stack 100 % native. Voici un apercu des projets
+              livres cette annee.
             </p>
-            <div class="hero-actions">
-              <a class="hero-cta" href="#portfolio">Explorer nos projets</a>
-              <a class="hero-link" href="contact.html">Parler a un expert</a>
+            <div class="hero-links">
+              <a class="primary" href="#portfolio">Voir les projets</a>
+              <a class="secondary" href="contact.html">Demander un devis</a>
             </div>
           </div>
           <div class="hero-visual">
-            <div class="hero-orb"></div>
-            <p class="hero-note">
-              Design, developpement et motion dans un seul flux.
+            <p>
+              Front-end natif / Integration responsive / Accessibilite basique /
+              Gestion de contenus via API
             </p>
           </div>
         </div>
-        <div class="hero-scroll" aria-hidden="true">
-          <span class="scroll-cue"></span>
-          <span class="scroll-label">Defiler</span>
-        </div>
       </section>
 
-      <section
-        class="portfolio"
-        id="portfolio"
-        aria-labelledby="portfolio-title"
-      >
-        <div class="container">
-          <header class="section-header">
-            <div>
-              <p class="section-kicker">Portfolio</p>
-              <h2 class="section-title" id="portfolio-title">
-                Nos realisations
-              </h2>
-              <p class="section-subtitle">
-                Selection de projets clients livrant des experiences immersives
-                et performantes.
-              </p>
-            </div>
-            <div class="section-stats" aria-live="polite">
-              <span data-project-count>0</span>
-              <span class="section-stats-label">projets</span>
-            </div>
-          </header>
-          <div
-            class="filters"
-            data-filter-root
-            aria-label="Filtrer par technologie"
-          ></div>
-          <div class="loader" data-loader role="status" aria-live="polite">
-            <span class="loader-dot"></span>
-            <span class="loader-dot"></span>
-            <span class="loader-dot"></span>
-            <span class="visually-hidden">Chargement des projets</span>
+      <section class="container" id="portfolio">
+        <header class="section-header">
+          <div>
+            <small>Portfolio</small>
+            <h2>Nos realisations client</h2>
+            <p>
+              Les donnees proviennent d'une API publique et sont filtrables par
+              technologie.
+            </p>
           </div>
-          <p class="error-message" data-error role="alert" hidden></p>
-          <div class="portfolio-grid" data-project-grid></div>
+          <div class="count-pill" aria-live="polite">
+            <span data-project-count>0</span> projets
+          </div>
+        </header>
+
+        <div class="filters" data-filter-root></div>
+        <div class="loader" data-loader hidden>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span class="visually-hidden">Chargement des projets</span>
         </div>
+        <p class="error-box" data-error hidden role="alert"></p>
+        <div class="grid" data-project-grid></div>
       </section>
     </main>
 
-    <div class="modal-root" data-modal-root hidden>
-      <div class="modal-overlay" data-modal-overlay></div>
-      <section
-        class="modal-dialog"
+    <div class="modal-wrapper" data-modal hidden>
+      <article
+        class="modal"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="project-modal-title"
+        aria-labelledby="modal-title"
       >
         <button
           class="modal-close"
           type="button"
           data-modal-close
-          aria-label="Fermer le detail du projet"
+          aria-label="Fermer la fenetre"
         >
-          <span></span>
-          <span></span>
+          X
         </button>
-        <div class="modal-content">
-          <figure class="modal-media">
-            <img data-modal-image src="" alt="" loading="lazy" />
-          </figure>
-          <div class="modal-body">
-            <p class="modal-kicker" data-modal-client></p>
-            <h3
-              class="modal-title"
-              id="project-modal-title"
-              data-modal-title
-            ></h3>
-            <p class="modal-description" data-modal-description></p>
-            <dl class="modal-meta">
-              <div>
-                <dt>Categorie</dt>
-                <dd data-modal-category></dd>
-              </div>
-              <div>
-                <dt>Annee</dt>
-                <dd data-modal-year></dd>
-              </div>
-              <div>
-                <dt>Duree</dt>
-                <dd data-modal-duration></dd>
-              </div>
-            </dl>
-            <div class="modal-tags" data-modal-technologies></div>
-            <div class="modal-features">
-              <h4>Fonctionnalites</h4>
-              <ul data-modal-features></ul>
+        <figure>
+          <img data-modal-image src="" alt="" loading="lazy" />
+        </figure>
+        <div class="modal-body">
+          <span class="client" data-modal-client></span>
+          <h3 id="modal-title" data-modal-title></h3>
+          <p data-modal-description></p>
+          <dl>
+            <div>
+              <dt>Categorie</dt>
+              <dd data-modal-category></dd>
             </div>
-            <a
-              class="modal-cta"
-              data-modal-link
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Visiter le projet</a
-            >
+            <div>
+              <dt>Annee</dt>
+              <dd data-modal-year></dd>
+            </div>
+            <div>
+              <dt>Duree</dt>
+              <dd data-modal-duration></dd>
+            </div>
+          </dl>
+          <div class="modal-tags" data-modal-technologies></div>
+          <div class="modal-features">
+            <strong>Fonctionnalites</strong>
+            <ul data-modal-features></ul>
           </div>
+          <a
+            class="modal-link"
+            href="#"
+            data-modal-link
+            target="_blank"
+            rel="noopener noreferrer"
+            >Visiter le site</a
+          >
         </div>
-      </section>
+      </article>
     </div>
 
-    <footer class="site-footer">
-      <div class="container footer-inner">
+    <footer>
+      <div class="container">
         <p>
-          &copy; <span data-current-year></span> WebCraft Solutions. Tous droits
-          reserves.
+          &copy; <span data-current-year></span> WebCraft Solutions. Portfolio.
         </p>
-        <ul class="footer-links" aria-label="Reseaux sociaux">
+        <ul>
           <li><a href="#">Behance</a></li>
           <li><a href="#">Dribbble</a></li>
           <li><a href="#">LinkedIn</a></li>
