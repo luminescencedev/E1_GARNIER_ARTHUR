@@ -74,7 +74,9 @@ function initPortfolio() {
   state.modalFeatures = document.querySelector("[data-modal-features]");
   state.modalLink = document.querySelector("[data-modal-link]");
   state.modalClose = document.querySelector("[data-modal-close]");
-  state.modalPlaceholder = state.modalImage ? state.modalImage.dataset.placeholder || "" : "";
+  state.modalPlaceholder = state.modalImage
+    ? state.modalImage.dataset.placeholder || ""
+    : "";
 
   bindModal();
   loadProjects();
@@ -93,7 +95,9 @@ async function loadProjects() {
 
     const data = await response.json();
     const projects = Array.isArray(data.projects) ? data.projects : [];
-    const techsFromApi = Array.isArray(data.technologies) ? data.technologies : [];
+    const techsFromApi = Array.isArray(data.technologies)
+      ? data.technologies
+      : [];
 
     state.projects = projects;
 
@@ -147,8 +151,10 @@ function getVisibleProjects() {
     return state.projects;
   }
 
-  return state.projects.filter((project) =>
-    Array.isArray(project.technologies) && project.technologies.includes(state.filter)
+  return state.projects.filter(
+    (project) =>
+      Array.isArray(project.technologies) &&
+      project.technologies.includes(state.filter)
   );
 }
 
@@ -243,7 +249,12 @@ function renderProjects() {
 
     card.addEventListener("click", open);
     card.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " " && event.key !== "Spacebar" && event.key !== "Space") {
+      if (
+        event.key !== "Enter" &&
+        event.key !== " " &&
+        event.key !== "Spacebar" &&
+        event.key !== "Space"
+      ) {
         return;
       }
       event.preventDefault();
@@ -315,7 +326,8 @@ function fillModal(project) {
   }
 
   if (state.modalDescription) {
-    state.modalDescription.textContent = project.description || "Description a completer.";
+    state.modalDescription.textContent =
+      project.description || "Description a completer.";
   }
 
   if (state.modalCategory) {
@@ -441,7 +453,12 @@ function initContactForm() {
   });
 
   form.addEventListener("input", (event) => {
-    if (!(event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement)) {
+    if (
+      !(
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      )
+    ) {
       return;
     }
 
@@ -476,7 +493,8 @@ function validateField(field, value) {
 
   if (field === "email") {
     if (!text) return "L'email est requis.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) return "Format email invalide.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text))
+      return "Format email invalide.";
   }
 
   if (field === "message") {
@@ -497,7 +515,12 @@ function setFieldError(form, field, message) {
   const input = form.elements.namedItem(field);
   const feedback = form.querySelector(`[data-error-for="${field}"]`);
 
-  if (!(input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) || !feedback) {
+  if (
+    !(
+      input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement
+    ) ||
+    !feedback
+  ) {
     return;
   }
 

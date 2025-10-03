@@ -32,6 +32,14 @@ E1_GARNIER_ARTHUR/
 2. Ouvrir `index.html` dans votre navigateur (double clic ou serveurlocal type `npx serve`).
 3. Verifier que la connexion internet est active pour charger l API distante.
 
+## Conformite au cahier des charges
+- **HTML5** : structure semantique, attributs ARIA et meta conformes, images avec `alt`. Pages valides W3C (penser a conserver les captures).
+- **CSS3** : variables de theme, grille responsive (Grid), media queries pour < 780px et < 520px, animations via `@keyframes dot`, hover sur cartes/liens.
+- **JavaScript** : code ES6 (`const`, `let`, template literals), manipulation DOM, gestion d evenements (click, keydown, submit), modale complete, filtrage dynamique, validation du formulaire.
+- **AJAX** : requete `fetch` asynchrone avec `try/catch`, loader affiche/masque, DOM mis a jour sans rechargement.
+- **Organisation** : HTML/CSS/JS dans des fichiers dedies, commentaires techniques ponctuels, nommage coherent.
+- **Livrables** : README, rappel de fournir un depot GitHub et captures de validation W3C.
+
 ## Tests manuels
 - **Portfolio** : ouvrir `index.html`, attendre le chargement, tester plusieurs filtres et ouvrir/fermer la modale (clic, touche `Enter`, touche `Echap`).
 - **Responsive** : reduire la fenetre ou utiliser les outils dev pour tester le menu mobile.
