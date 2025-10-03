@@ -74,6 +74,7 @@ function initPortfolio() {
   state.modalFeatures = document.querySelector("[data-modal-features]");
   state.modalLink = document.querySelector("[data-modal-link]");
   state.modalClose = document.querySelector("[data-modal-close]");
+  state.modalPlaceholder = state.modalImage ? state.modalImage.dataset.placeholder || "" : "";
 
   bindModal();
   loadProjects();
@@ -299,7 +300,7 @@ function fillModal(project) {
       state.modalImage.alt = `Visuel du projet ${title}`;
       state.modalImage.removeAttribute("hidden");
     } else {
-      state.modalImage.src = "";
+      state.modalImage.src = state.modalPlaceholder;
       state.modalImage.alt = "";
       state.modalImage.setAttribute("hidden", "true");
     }

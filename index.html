@@ -1,14 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Portfolio de l'agence WebCraft Solutions."
-    />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio de l'agence WebCraft Solutions.">
     <title>WebCraft Solutions - Portfolio</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css">
   </head>
   <body data-page="home">
     <a class="skip-link" href="#main">Passer au contenu</a>
@@ -18,15 +15,7 @@
           <strong>WebCraft</strong>
           <span>Solutions</span>
         </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          data-nav-toggle
-          aria-controls="site-nav"
-          aria-expanded="false"
-        >
-          Menu
-        </button>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false">Menu</button>
         <nav aria-label="Navigation principale">
           <ul id="site-nav" data-nav-list>
             <li><a href="index.html" aria-current="page">Accueil</a></li>
@@ -44,9 +33,7 @@
             <small>Studio web</small>
             <h1>Des interfaces sobres qui vont droit au but</h1>
             <p>
-              L'agence WebCraft concoit des sites vitrines et applications
-              front-end avec une stack 100 % native. Voici un apercu des projets
-              livres cette annee.
+              L'agence WebCraft concoit des sites vitrines et applications front-end avec une stack 100 % native. Voici un apercu des projets livres cette annee.
             </p>
             <div class="hero-links">
               <a class="primary" href="#portfolio">Voir les projets</a>
@@ -54,10 +41,7 @@
             </div>
           </div>
           <div class="hero-visual">
-            <p>
-              Front-end natif / Integration responsive / Accessibilite basique /
-              Gestion de contenus via API
-            </p>
+            <p>Front-end natif / Integration responsive / Accessibilite basique / Gestion de contenus via API</p>
           </div>
         </div>
       </section>
@@ -67,10 +51,7 @@
           <div>
             <small>Portfolio</small>
             <h2>Nos realisations client</h2>
-            <p>
-              Les donnees proviennent d'une API publique et sont filtrables par
-              technologie.
-            </p>
+            <p>Les donnees proviennent d'une API publique et sont filtrables par technologie.</p>
           </div>
           <div class="count-pill" aria-live="polite">
             <span data-project-count>0</span> projets
@@ -90,63 +71,51 @@
     </main>
 
     <div class="modal-wrapper" data-modal hidden>
-      <article
-        class="modal"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
-      >
-        <button
-          class="modal-close"
-          type="button"
-          data-modal-close
-          aria-label="Fermer la fenetre"
-        >
-          X
-        </button>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <button class="modal-close" type="button" data-modal-close aria-label="Fermer la fenetre">X</button>
         <figure>
-          <img data-modal-image src="" alt="" loading="lazy" />
+          <img
+            data-modal-image
+            src="data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs="
+            data-placeholder="data:image/gif;base64,R0lGODlhAQABAPAAAP///wAAACwAAAAAAQABAEACAkQBADs="
+            alt="Illustration generique de projet"
+            loading="lazy"
+            hidden
+          >
         </figure>
         <div class="modal-body">
-          <span class="client" data-modal-client></span>
-          <h3 id="modal-title" data-modal-title></h3>
-          <p data-modal-description></p>
+          <span class="client" data-modal-client>Client WebCraft</span>
+          <h3 id="modal-title" data-modal-title>Projet WebCraft</h3>
+          <p data-modal-description>Description a completer.</p>
           <dl>
             <div>
               <dt>Categorie</dt>
-              <dd data-modal-category></dd>
+              <dd data-modal-category>Non precise</dd>
             </div>
             <div>
               <dt>Annee</dt>
-              <dd data-modal-year></dd>
+              <dd data-modal-year>-</dd>
             </div>
             <div>
               <dt>Duree</dt>
-              <dd data-modal-duration></dd>
+              <dd data-modal-duration>-</dd>
             </div>
           </dl>
           <div class="modal-tags" data-modal-technologies></div>
           <div class="modal-features">
             <strong>Fonctionnalites</strong>
-            <ul data-modal-features></ul>
+            <ul data-modal-features>
+              <li>Fonctionnalites a detailler.</li>
+            </ul>
           </div>
-          <a
-            class="modal-link"
-            href="#"
-            data-modal-link
-            target="_blank"
-            rel="noopener noreferrer"
-            >Visiter le site</a
-          >
+          <a class="modal-link" href="#" data-modal-link target="_blank" rel="noopener noreferrer">Visiter le site</a>
         </div>
-      </article>
+      </div>
     </div>
 
     <footer>
       <div class="container">
-        <p>
-          &copy; <span data-current-year></span> WebCraft Solutions. Portfolio.
-        </p>
+        <p>&copy; <span data-current-year></span> WebCraft Solutions. Portfolio d'entrainement.</p>
         <ul>
           <li><a href="#">Behance</a></li>
           <li><a href="#">Dribbble</a></li>
