@@ -447,7 +447,7 @@ function initContactForm() {
     }
 
     status.hidden = false;
-    status.textContent = "Message envoye. Nous revenons vers vous rapidement.";
+    status.textContent = "Message envoyé. Nous revenons vers vous rapidement.";
     status.className = "status-msg success";
     form.reset();
   });
