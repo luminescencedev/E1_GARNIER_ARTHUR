@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contactez WebCraft Solutions.">
+    <title>WebCraft Solutions — Contact</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body data-page="contact">
+    <a class="skip-link" href="#content">Aller au contenu</a>
+    <header class="site-header" role="banner">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="WebCraft Solutions accueil">
+          <span class="brand-logo">WebCraft</span>
+          <span class="brand-tag">Solutions</span>
+        </a>
+        <button class="nav-toggle" type="button" data-nav-toggle aria-expanded="false" aria-controls="primary-navigation">
+          <span class="nav-toggle-box" aria-hidden="true">
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+            <span class="nav-toggle-bar"></span>
+          </span>
+          <span class="visually-hidden">Afficher le menu</span>
+        </button>
+        <nav class="site-nav" id="primary-navigation" data-primary-nav aria-label="Navigation principale">
+          <ul>
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="about.html">A propos</a></li>
+            <li><a href="contact.html" aria-current="page">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="contact-main">
+      <section class="page-hero contact-hero">
+        <div class="container">
+          <p class="hero-kicker">Parlons de votre projet</p>
+          <h1 class="page-title">Un brief suffit pour lancer votre prochaine experience digitale</h1>
+          <p class="page-lead">Remplissez le formulaire ou ecrivez-nous directement. Notre equipe revient vers vous en moins de 24 heures.</p>
+        </div>
+      </section>
+
+      <section class="contact-section">
+        <div class="container contact-grid">
+          <form class="contact-form" data-contact-form novalidate>
+            <div class="form-field">
+              <label class="form-label" for="contact-name">Nom *</label>
+              <input class="form-input" id="contact-name" name="name" type="text" placeholder="Votre nom" autocomplete="name" required>
+              <span class="field-error" data-error-for="name"></span>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contact-email">Email *</label>
+              <input class="form-input" id="contact-email" name="email" type="email" placeholder="vous@example.com" autocomplete="email" required>
+              <span class="field-error" data-error-for="email"></span>
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="contact-message">Message *</label>
+              <textarea class="form-input" id="contact-message" name="message" rows="6" placeholder="Parlez-nous de vos objectifs" required></textarea>
+              <span class="field-error" data-error-for="message"></span>
+            </div>
+            <button class="form-submit" type="submit">Envoyer la demande</button>
+            <p class="form-status" data-form-status role="alert" aria-live="polite" hidden></p>
+          </form>
+
+          <aside class="contact-card" aria-label="Informations de contact">
+            <h2>Collaborons</h2>
+            <p>Nous accompagnons les marques ambitieuses sur des missions de design, developpement front-end et optimisation d'experience.</p>
+            <ul class="contact-info">
+              <li>
+                <span class="contact-label">Email</span>
+                <a href="mailto:hello@webcraft.solutions">hello@webcraft.solutions</a>
+              </li>
+              <li>
+                <span class="contact-label">Telephone</span>
+                <a href="tel:+33102030405">+33 1 02 03 04 05</a>
+              </li>
+              <li>
+                <span class="contact-label">Adresse</span>
+                <address>32 rue des Artisans, 75011 Paris</address>
+              </li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <p>&copy; <span data-current-year></span> WebCraft Solutions. Tous droits reserves.</p>
+        <ul class="footer-links" aria-label="Reseaux sociaux">
+          <li><a href="#">Behance</a></li>
+          <li><a href="#">Dribbble</a></li>
+          <li><a href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <script src="js/main.js" defer></script>
+  </body>
+</html>
